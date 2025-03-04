@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agenda 2025</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #e3dccc;
+      font-family: sans-serif;
+    }
+    .header {
+      text-align: center;
+      padding: 10px;
+      background: #b38b6d;
+      color: #fff;
+      position: sticky;
+      top: 0;
+    }
+    .week-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .week-nav button {
+      padding: 5px 10px;
+      cursor: pointer;
+      background: #f0e3d1;
+      border: 1px solid #b38b6d;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .week-info {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .notebook {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      background: #f4f1ec;
+    }
+    .spiral {
+      width: 20px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #888,
+        #888 3px,
+        transparent 3px,
+        transparent 6px
+      );
+    }
+    .page {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .day-box {
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+    .day-header {
+      font-weight: bold;
+      margin-bottom: 5px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    .tasks {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .tasks li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #eee;
+      padding: 5px 0;
+    }
+    .tasks li:last-child {
+      border-bottom: none;
+    }
+    .task-text {
+      flex: 1;
+      margin: 0 5px;
+    }
+    .completed .task-text {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .tick-btn {
+      background: #c4f0c4;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px 5px;
+      margin-right: 5px;
+    }
+    .remove-btn {
+      background: #ff9e9e;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 2px 5px;
+      margin-left: 5px;
+    }
+    .add-task {
+      display: flex;
+      margin-top: 5px;
+    }
+    .add-task input {
+      flex: 1;
+      padding: 5px;
+    }
+    .add-task button {
+      padding: 5px 10px;
+      margin-left: 5px;
+      background: #b2d8b2;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .notebook {
+        flex-direction: column;
+      }
+      .spiral {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="week-nav">
+      <button id="prevWeek">&lt; Semana Anterior</button>
+      <span class="week-info" id="weekInfo"></span>
+      <button id="nextWeek">Semana Siguiente &gt;</button>
+    </div>
+  </div>
+
+  <div class="notebook">
+    <div class="page left-page">
+      <div class="day-box">
+        <div class="day-header" id="mon-header">Lunes</div>
+        <ul class="tasks" id="mon-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="mon-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('mon')">Agregar</button>
+        </div>
+      </div>
+      <div class="day-box">
+        <div class="day-header" id="tue-header">Martes</div>
+        <ul class="tasks" id="tue-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="tue-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('tue')">Agregar</button>
+        </div>
+      </div>
+      <div class="day-box">
+        <div class="day-header" id="wed-header">Miércoles</div>
+        <ul class="tasks" id="wed-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="wed-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('wed')">Agregar</button>
+        </div>
+      </div>
+    </div>
+    <div class="spiral"></div>
+    <div class="page right-page">
+      <div class="day-box">
+        <div class="day-header" id="thu-header">Jueves</div>
+        <ul class="tasks" id="thu-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="thu-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('thu')">Agregar</button>
+        </div>
+      </div>
+      <div class="day-box">
+        <div class="day-header" id="fri-header">Viernes</div>
+        <ul class="tasks" id="fri-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="fri-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('fri')">Agregar</button>
+        </div>
+      </div>
+      <div class="day-box">
+        <div class="day-header" id="sat-header">Sábado</div>
+        <ul class="tasks" id="sat-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="sat-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('sat')">Agregar</button>
+        </div>
+      </div>
+      <div class="day-box">
+        <div class="day-header" id="sun-header">Domingo</div>
+        <ul class="tasks" id="sun-tasks"></ul>
+        <div class="add-task">
+          <input type="text" id="sun-input" placeholder="Nueva tarea...">
+          <button onclick="addTask('sun')">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Rango de semanas válido para 2025
+    const minWeek = 1;
+    const maxWeek = 53;
+
+    let currentWeek = loadCurrentWeek();
+    // Si no hay semana o está fuera de rango, la fijamos a 1
+    if (isNaN(currentWeek) || currentWeek < minWeek || currentWeek > maxWeek) {
+      currentWeek = 1;
+      storeCurrentWeek(currentWeek);
+    }
+
+    document.getElementById('prevWeek').addEventListener('click', () => {
+      currentWeek = Math.max(minWeek, currentWeek - 1);
+      storeCurrentWeek(currentWeek);
+      displayWeek(currentWeek);
+    });
+    document.getElementById('nextWeek').addEventListener('click', () => {
+      currentWeek = Math.min(maxWeek, currentWeek + 1);
+      storeCurrentWeek(currentWeek);
+      displayWeek(currentWeek);
+    });
+
+    // Cargar semana actual del localStorage
+    function loadCurrentWeek() {
+      const val = localStorage.getItem('agenda2025_currentWeek');
+      return val ? parseInt(val, 10) : 1;
+    }
+    // Guardar semana actual en localStorage
+    function storeCurrentWeek(week) {
+      localStorage.setItem('agenda2025_currentWeek', week);
+    }
+
+    // Obtiene el lunes de la semana dada (ISO) en 2025
+    function getMondayOfWeek(weekNumber, year) {
+      // Tomamos el día 4 de enero como referencia para la semana 1
+      let d = new Date(year, 0, 4);
+      let dayOfWeek = d.getDay();
+      if (dayOfWeek === 0) dayOfWeek = 7;
+      d.setDate(d.getDate() - (dayOfWeek - 1));
+      d.setDate(d.getDate() + (weekNumber - 1) * 7);
+      return d;
+    }
+
+    // Muestra la semana en pantalla
+    function displayWeek(weekNumber) {
+      document.getElementById('weekInfo').textContent = `Semana ${weekNumber} de 2025`;
+      const monday = getMondayOfWeek(weekNumber, 2025);
+      const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+      const dayIds = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+
+      for (let i = 0; i < 7; i++) {
+        let date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+        const dayId = dayIds[i];
+        const header = document.getElementById(dayId + '-header');
+        header.textContent = `${dayNames[i]} ${date.getDate()}/${date.getMonth()+1}`;
+        const ul = document.getElementById(dayId + '-tasks');
+        ul.innerHTML = "";
+        const tasks = loadTasks(formatDateKey(date));
+        tasks.forEach(t => createTaskListItem(dayId, t.text, t.completed));
+      }
+    }
+
+    // Agregar tarea
+    function addTask(dayId) {
+      const input = document.getElementById(dayId + '-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const date = getDayDate(dayId);
+      const key = formatDateKey(date);
+      const tasks = loadTasks(key);
+      tasks.push({ text, completed: false });
+      saveTasks(key, tasks);
+      createTaskListItem(dayId, text, false);
+      input.value = "";
+    }
+
+    // Crear elemento de lista en pantalla
+    function createTaskListItem(dayId, text, completed) {
+      const ul = document.getElementById(dayId + '-tasks');
+      const li = document.createElement('li');
+
+      const span = document.createElement('span');
+      span.className = 'task-text';
+      span.textContent = text;
+
+      if (completed) {
+        li.classList.add('completed');
+      }
+
+      const tickBtn = document.createElement('button');
+      tickBtn.className = 'tick-btn';
+      tickBtn.textContent = '✔';
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = 'X';
+
+      tickBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        li.classList.toggle('completed');
+        toggleCompleted(dayId, text);
+      });
+
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeTask(dayId, text);
+      });
+
+      li.appendChild(tickBtn);
+      li.appendChild(span);
+      li.appendChild(removeBtn);
+      ul.appendChild(li);
+    }
+
+    // Eliminar tarea
+    function removeTask(dayId, text) {
+      const date = getDayDate(dayId);
+      const key = formatDateKey(date);
+      let tasks = loadTasks(key);
+      tasks = tasks.filter(t => t.text !== text);
+      saveTasks(key, tasks);
+      refreshDay(dayId, tasks);
+    }
+
+    // Marcar tarea como completada / no completada
+    function toggleCompleted(dayId, text) {
+      const date = getDayDate(dayId);
+      const key = formatDateKey(date);
+      let tasks = loadTasks(key);
+      const task = tasks.find(t => t.text === text);
+      if (task) {
+        task.completed = !task.completed;
+        saveTasks(key, tasks);
+      }
+    }
+
+    // Volver a mostrar la lista de un día
+    function refreshDay(dayId, tasks) {
+      const ul = document.getElementById(dayId + '-tasks');
+      ul.innerHTML = '';
+      tasks.forEach(t => createTaskListItem(dayId, t.text, t.completed));
+    }
+
+    // Devuelve la fecha real (Date) del díaId en la semana actual
+    function getDayDate(dayId) {
+      const dayIndexMap = { mon:0, tue:1, wed:2, thu:3, fri:4, sat:5, sun:6 };
+      const monday = getMondayOfWeek(currentWeek, 2025);
+      monday.setDate(monday.getDate() + dayIndexMap[dayId]);
+      return monday;
+    }
+
+    // Convierte fecha a clave tipo "2025-01-15"
+    function formatDateKey(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // Carga tareas de localStorage con manejo de errores
+    function loadTasks(key) {
+      const data = localStorage.getItem('agenda2025_' + key);
+      if (!data) return [];
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        // Si hay datos corruptos, los borramos para evitar bloquear la app
+        localStorage.removeItem('agenda2025_' + key);
+        return [];
+      }
+    }
+
+    // Guarda tareas en localStorage
+    function saveTasks(key, tasks) {
+      localStorage.setItem('agenda2025_' + key, JSON.stringify(tasks));
+    }
+
+    // Mostrar la semana actual al cargar
+    displayWeek(currentWeek);
+  </script>
+</body>
+</html>
