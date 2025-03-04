@@ -1,0 +1,9 @@
+{
+  "name": "miagenda",
+  "version": "1.0.0",
+  "description": "Agenda digital Cordova",
+  "scripts": {
+    "build": "cordova build android --release"
+  },
+  "dependencies": {}
+}
